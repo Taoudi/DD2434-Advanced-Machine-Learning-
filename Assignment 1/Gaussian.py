@@ -16,11 +16,11 @@ def prior_plot():
     variance_y = 1
 
     # Create grid and multivariate normal
-    x = np.linspace(-2, 2, 500)
-    y = np.linspace(-2, 2, 500)
+    x = np.linspace(-2, 2, 2000)
+    y = np.linspace(-2, 2, 2000)
     X, Y = np.meshgrid(x, y)
     pos = np.empty(X.shape + (2,))
-    pos[:, :, 0] = X;
+    pos[:, :, 0] = X
     pos[:, :, 1] = Y
     rv = stats.multivariate_normal([mu_x, mu_y], [[variance_x, 0], [0, variance_y]])
 
@@ -35,12 +35,12 @@ def prior_plot():
 
 
 def parameters():
-    n = 4
+    n = 6
     w0 = 0.5
     w1 = -1.5
     x_row = np.arange(-1, 1+(2/n), (2/n))
     print(x_row)
-    t_row = w0 * x_row + w1 + np.random.normal(0, 0.2)
+    t_row = w0 * x_row + w1 + np.random.normal(0, 0.8)
     t_col = t_row.reshape(-1, 1)
 
     x_col = np.c_[np.ones(n+1), x_row]
@@ -96,5 +96,6 @@ def sampling(mu, co):
 
 
 mu, sig = parameters()
-plot(mu,sig)
+#prior_plot()
 #sampling(mu, sig)
+plot(mu, sig)
