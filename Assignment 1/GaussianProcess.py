@@ -2,7 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 from mpl_toolkits.mplot3d import Axes3D
-tau = 10
+
+tau = 1
+
 
 def kernel(x, y):
     tau = 1
@@ -10,13 +12,13 @@ def kernel(x, y):
     return var * np.exp(-(np.transpose(x - y) @ (x - y)) / np.power(tau, 2))
 
 
-def cov(x):
-
+def cov(x, x2):
     variance = 1
     i = 0
     arr = 0
     for var in x:
-        temp = variance * np.exp(-((var - x) ** 2) / (tau ** 2))
+        temp = variance * np.exp(-((var - x2) ** 2) / (tau ** 2))
+        # print(temp)
         if i == 0:
             arr = temp
         else:
@@ -25,34 +27,44 @@ def cov(x):
     return arr
 
 
-def gauss_it(cov):
-    times = 10
-    mu = np.zeros(len(cov))
-    i = 0
-    arr = 0
-    while i < times:
-        f = np.random.multivariate_normal(mu, cov)
-        print(f)
-        if i == 0:
-            arr = f
-        else:
-            arr = np.c_[arr, np.array(f)]
-        i += 1
-    lines = np.transpose(arr)
-    for line in lines:
-        #print(line)
-        plt.plot(np.arange(0, len(cov), 1), line)
-    plt.xlabel("x")
-    plt.ylabel("f")
-    plt.title("Gaussian Prior for l = " + str(tau))
-    plt.show()
-
-
 def data():
     xt = np.array([-4, -3, -2, -1, 0, 2, 3, 5])
     x = xt.reshape(-1, 1)
-    t = (2 + pow((0.5 * x - 1), 2) * np.sin(3 * x) + np.random.normal(0, 3))
+    t = (2 + pow((0.5 * x - 1), 2) * np.sin(3 * x))
     return x, t
+
+
+def new_data():
+    return np.arange(-7, 7, 0.01).reshape(-1, 1)
+
+
+def gauss_it(mu, co):
+    times = 5
+    i = 0
+    arr = 0
+    while i < times:
+        fff = np.random.multivariate_normal(mu.ravel(), co)
+        if i == 0:
+            arr = fff
+        else:
+            arr = np.c_[arr, np.array(fff)]
+        i += 1
+    dt, t = data()
+    plt.scatter(dt, t,zorder=10)
+    lines = np.transpose(arr)
+    i=2
+    for line in lines:
+        print(line)
+        plt.plot(new_data(), line,zorder=i)
+        i+=1
+    plt.title("GP Posterior with l=1")
+    plt.xlabel("x")
+    plt.ylabel("f")
+    plt.show()
+
+
+def sample_f(mu, cov):
+    return np.random.multivariate_normal(mu, cov)
 
 
 def parameters():
@@ -63,8 +75,23 @@ def parameters():
     return x_col
 
 
-x, t = data()
-x_col = parameters()
+def post_plot(mew, co):
+    x_axis = np.arange(-6, 10, 1)
+    # Mean = 0, SD = 2.
+    plt.plot(x_axis, stats.norm.pdf(x_axis, mew, co))
+    plt.show()
 
-# print(np.mean(t))
-gauss_it(cov(x_col))
+
+x, t = data()
+x_new = new_data()
+
+f = sample_f(np.zeros(len(x)), cov(x, x))
+
+inverse = np.linalg.inv(cov(x, x))
+xnewx = np.transpose(cov(x_new, x))
+mu = xnewx @ inverse @ t
+print(mu)
+
+var = cov(x_new, x_new) - xnewx @ inverse @ np.transpose(cov(x, x_new))
+print(var)
+gauss_it(mu, var)
