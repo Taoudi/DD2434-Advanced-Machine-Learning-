@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0d6af781-863f-477e-bb23-0868e80ddebf" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assignment 1/GaussianProcess.py" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment 1/GaussianProcess.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -12,7 +13,8 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/DD2434_Advanced_Machine_Learning_$Gaussian.coverage" NAME="Gaussian Coverage Results" MODIFIED="1575558825994" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Assignment 1" />
-    <SUITE FILE_PATH="coverage/DD2434_Advanced_Machine_Learning_$GaussianProcess.coverage" NAME="GaussianProcess Coverage Results" MODIFIED="1575749747336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Assignment 1" />
+    <SUITE FILE_PATH="coverage/DD2434_Advanced_Machine_Learning_$GaussianProcess.coverage" NAME="GaussianProcess Coverage Results" MODIFIED="1575834064287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Assignment 1" />
+    <SUITE FILE_PATH="coverage/DD2434_Advanced_Machine_Learning_$PPCA.coverage" NAME="PPCA Coverage Results" MODIFIED="1576330854498" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Assignment 1" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -42,11 +44,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assignment 1/GaussianProcess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+            <state relative-caret-position="45">
+              <caret line="3" column="13" selection-start-line="3" selection-end-line="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Assignment 1/PPCA.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -73,6 +84,7 @@
         <option value="$PROJECT_DIR$/Assignment 1/GaussianPrior.py" />
         <option value="$PROJECT_DIR$/Assignment 1/GaussianLinearRegression.py" />
         <option value="$PROJECT_DIR$/Assignment 1/GaussianProcess.py" />
+        <option value="$PROJECT_DIR$/Assignment 1/PPCA.py" />
       </list>
     </option>
   </component>
@@ -129,7 +141,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.GaussianProcess">
+  <component name="RunManager" selected="Python.PPCA">
     <configuration name="Gaussian" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="DD2434-Advanced-Machine-Learning-" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -174,8 +186,31 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="PPCA" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="DD2434-Advanced-Machine-Learning-" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Assignment 1" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Assignment 1/PPCA.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.PPCA" />
         <item itemvalue="Python.GaussianProcess" />
         <item itemvalue="Python.Gaussian" />
       </list>
@@ -192,23 +227,23 @@
       <option name="presentableId" value="Default" />
       <updated>1575473928259</updated>
       <workItem from="1575473933176" duration="38557000" />
-      <workItem from="1575736423519" duration="5853000" />
+      <workItem from="1575736423519" duration="13911000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44410000" />
+    <option name="totallyTimeSpent" value="52468000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4989733" visible="true" weight="0.2532189" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4989733" visible="true" weight="0.072961375" />
       <window_info id="Structure" order="1" sideWeight="0.5010267" side_tool="true" weight="0.24964234" />
       <window_info id="Favorites" order="2" sideWeight="0.5010267" side_tool="true" weight="0.24964234" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33216783" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33216783" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39917126" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -263,8 +298,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Assignment 1/GaussianProcess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+        <state relative-caret-position="45">
+          <caret line="3" column="13" selection-start-line="3" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assignment 1/PPCA.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>

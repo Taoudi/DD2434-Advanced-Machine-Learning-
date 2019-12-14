@@ -34,7 +34,7 @@ def cov(x, x2):
 def data():
     xt = np.array([-4, -3, -2, -1, 0, 2, 3, 5])
     x = xt.reshape(-1, 1)
-    t = (2 + pow((0.5 * x - 1), 2) * np.sin(3 * x)) + np.random.normal(0, noise, x.shape)
+    t = (2 + pow((0.5 * x - 1), 2) * np.sin(3 * x)) #+ np.random.normal(0, noise, x.shape)
     print(t)
     return x, t
 
@@ -117,7 +117,7 @@ x_new = new_data()
 f = sample_f(np.zeros(len(x)), cov(x, x))
 print(3 * np.identity(len(x)))
 
-inverse = np.linalg.inv(cov(x, x) + (inv_noise ** 2) * np.identity(len(x)))
+inverse = np.linalg.inv(cov(x, x)) #+ (inv_noise ** 2) * np.identity(len(x)))
 
 xnewx = np.transpose(cov(x_new, x))
 mult = xnewx @ inverse
