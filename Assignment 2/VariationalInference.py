@@ -1,13 +1,28 @@
 import numpy as np
 
+### Set Parameters
+true_precision = 1
+true_mean = 5
 
-def likelihood(X, tau, mu):
-    N = len(X)
 
-    x = np.arange(-100, 100, 1)
-    sum_data = (x - mu) ** 2
-    D = np.exp((tau / (2 * np.pi)) ** (N / 2), -(tau / 2) * sum_data)
+def likelihood(data):
+    N = len(data)
+    sum_data = (data - true_mean) ** 2
+    sum = np.sum(sum_data)
+    print(-(true_precision / 2) * sum)
+    D = (true_precision / (2 * np.pi)) ** (N / 2) * np.exp(-(true_precision / 2) * sum)
     return D
+
+
+def data_set():
+    N = 10
+    lower = -10
+    higher = 10
+    x = np.arange(lower, higher + np.abs(higher - lower) / N, np.abs(higher - lower) / N)
+    return x
+
+
+print(likelihood(data_set()))
 
 
 def expected_tau():
