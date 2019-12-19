@@ -5,6 +5,7 @@ true_precision = 1
 true_mean = 5
 
 
+# 10.21 ( Generate dataset Y/D)
 def likelihood(data):
     N = len(data)
     sum_data = (data - true_mean) ** 2
@@ -14,6 +15,7 @@ def likelihood(data):
     return D
 
 
+# generate random dataset X
 def data_set():
     N = 10
     lower = -10
@@ -25,15 +27,20 @@ def data_set():
 print(likelihood(data_set()))
 
 
-def expected_tau():
-    wtf = 0
-    return wtf
+# 10.29 and 10.30
+def expected_tau(a0, b0, lambda0, N):
+    a = a0 + (N / 2)
+
+    expected = 0  # do all calcs
+    b = b0 + (1 / 2) * expected
+    return a / b
 
 
-def gaussian_parameters(lambda0, mu0, X):
+# 10.26, 10.27
+def gaussian_parameters(lambda0, mu0, a0, b0, X):
     N = len(X)
     mu_n = (lambda0 * mu0 + N * np.average(X)) / (lambda0 + N)
-    lambda_n = (lambda0 + N) * expected_tau()
+    lambda_n = (lambda0 + N) * expected_tau(a0, b0.lambda0, N)
     return mu_n, lambda_n
 
 
