@@ -1,8 +1,11 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+from mpl_toolkits.mplot3d import Axes3D
 
 N = 10
-true_mean = 10
-true_precision = 2
+true_mean = 0
+true_precision = 1
 
 
 # generate random dataset X
@@ -45,8 +48,9 @@ def gamma_parameters(a0, b0, lambda0, mu0, lamb_n, mu_n, X):
     return a_n, b_n
 
 
-# iterative
+# Repeated (hopefully until convergence)
 def VI(a0, b0, mu0, lamb0, X):
+    times = 10
     i = 0
     while True:
         mu, lamb = gaussian_parameters(lamb0, mu0, a0, b0, X)
@@ -56,13 +60,11 @@ def VI(a0, b0, mu0, lamb0, X):
         a0 = a
         b0 = b
         i += 1
-        if i % 10 == 1:
-            print("mu: , lambda: ")
-            print(str(mu) + " , " + str(lamb))
-            print("a: , b:")
-            print(str(a) + " , " + str(b))
+        if i == times:
+            return mu, lamb, a, b
 
 
+# Once
 def VariationalInference(a0, b0, mu0, lamb0, X):
     mu, lamb = gaussian_parameters(lamb0, mu0, a0, b0, X)
     a, b = gamma_parameters(a0, b0, lamb0, mu0, lamb, mu, X)
@@ -70,7 +72,35 @@ def VariationalInference(a0, b0, mu0, lamb0, X):
     return mu, lamb, a, b
 
 
+"""def plot(mean, variance, a, b):
+    x_axis = np.arange(-10, 10, 0.001)
+    # Mean = 0, SD = 2.
+    plt.plot(stats.gamma.pdf(x_axis, a, scale=1 / b), stats.norm.pdf(x_axis, mean, variance ** (-1)))
+    plt.show()"""
 
 
+def q_mu(x):
+    return stats.norm.pdf(x, mu, np.sqrt(1 / lam))
 
-print(VariationalInference(0, 0, 0, 0, data_set()))
+
+def q_tau(tau):
+    return stats.gamma.pdf(tau, a, loc=0, scale=1 / b)
+
+
+def plot():
+    mus = np.linspace(-4, 4, 100)
+    taus = np.linspace(-3, 3, 100)
+    M, T = np.meshgrid(mus, taus, indexing="ij")
+    Z = np.zeros_like(M)
+
+    for i in range(Z.shape[0]):
+        for j in range(Z.shape[1]):
+            Z[i][j] = q_mu(mus[i]) * q_tau(taus[j])
+
+    plt.contour(M, T, Z)
+    plt.show()
+
+
+mu, lam, a, b = VariationalInference(0, 0, 0, 0, data_set())
+
+plot()
