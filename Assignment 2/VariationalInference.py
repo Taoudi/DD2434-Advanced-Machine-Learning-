@@ -5,7 +5,7 @@ from matplotlib.lines import Line2D
 from mpl_toolkits.mplot3d import Axes3D
 
 N = 10
-true_mu, true_lam, true_a, true_b = 3, 1, 2, 6
+true_mu, true_lam, true_a, true_b = 6, 0.1, 1, 4
 
 
 def gauss_sample(mean, prec):
@@ -41,16 +41,16 @@ def expected_mu(lamb0, X, mu0, mu_n, lamb_n):
     return (1 / 2 * square_sum) + lamb0 * ((mu0 ** 2) - (2 * mu0 * mu_n) + E_mu2)
 
 
-def approx_a(a0):
-    return a0 + ((N + 1) / 2)
+def approx_a(a0, n):
+    return a0 + ((n + 1) / 2)
 
 
-def approx_mu(l0, m0, X):
-    return (l0 * m0 + N * np.average(X)) / (l0 + N)
+def approx_mu(l0, m0, X, n):
+    return (l0 * m0 + n * np.average(X)) / (l0 + n)
 
 
-def approx_lambda(l0, a_n, b_n):
-    return (l0 + N) * (a_n / b_n)
+def approx_lambda(l0, a_n, b_n, n):
+    return (l0 + n) * (a_n / b_n)
 
 
 def approx_b(m0, m_n, l_n, l0, b0):
@@ -60,8 +60,8 @@ def approx_b(m0, m_n, l_n, l0, b0):
 # Once
 def VariationalInference(mu0, lamb0, a0, b0, X, iterations):
     i = 0
-    la = 5
-    be = 5
+    la = 1
+    be = 1
     mu = mu0
     al = a0
     while i < iterations:
@@ -69,10 +69,10 @@ def VariationalInference(mu0, lamb0, a0, b0, X, iterations):
         # mu0 = mu
         # lamb0 = la
         # b0 = be
-        al = approx_a(a0)
-        mu = approx_mu(lamb0, mu0, X)
+        al = approx_a(a0, N)
+        mu = approx_mu(lamb0, mu0, X, N)
         be = approx_b(mu0, mu, la, lamb0, b0)
-        la = approx_lambda(lamb0, al, be)
+        la = approx_lambda(lamb0, al, be, N)
         i += 1
         if i == iterations:
             return mu, la, al, be
@@ -97,8 +97,8 @@ def true_plot(mean, precision, alpha, beta, data):
     print("Generated mean, tau: " + str(true_mean) + " ," + str(true_precision))
     print("Actual mean, lambda , alpha ,beta: " + str(mean) + " ," + str(precision) + " ," + str(alpha) + " ," + str(
         beta))
-    mus = np.linspace(true_mean - 5, true_mean + 5, 100)
-    taus = np.linspace(true_precision - 1, true_precision + 1, 100)
+    mus = np.linspace(4, 7, 100)
+    taus = np.linspace(true_precision - 0.5, true_precision + 0.5, 100)
     M, T = np.meshgrid(mus, taus, indexing="ij")
     Z = np.zeros_like(M)
     for i in range(Z.shape[0]):
@@ -118,8 +118,8 @@ def plot(mean, precision, alpha, beta):
         "Observed mean, tau, lambda , alpha ,beta: " + str(mean) + " ," + str(precision) + " ," + str(
             alpha) + " ," + str(
             beta))
-    mus = np.linspace(true_mean - 5, true_mean + 5, 100)
-    taus = np.linspace(true_precision - 1, true_precision + 1, 100)
+    mus = np.linspace(4, 7, 100)
+    taus = np.linspace(true_precision - 0.5, true_precision + 0.5, 100)
     M, T = np.meshgrid(mus, taus, indexing="ij")
     Z = np.zeros_like(M)
 
@@ -131,9 +131,10 @@ def plot(mean, precision, alpha, beta):
 
 
 X = data_set(true_mean, true_precision)
-# X = np.array([4.91683995, 2.28125975, 0.95866215, 1.34756688, 0.88799854, 2.22666351,
-# 3.93950624, 4.88324244, 0.20460881, 2.40607224])
-iter = 1000
+X = np.array([2.88968457, 6.96566223, 7.04354481, 6.74967938, 8.07064458, 5.77937716,
+              3.722499, 3.30732687, 5.07045578, 4.26291923])
+print(X)
+iter = 10
 m, l, a, b = 0, 0, 0, 0
 
 m, l, a, b = VariationalInference(m, l, a, b, X, iter)
@@ -147,6 +148,7 @@ true_plot(true_mu, true_lam, true_a, true_b, X)
 plot(m, l, a, b)
 plt.xlabel("mean")
 plt.ylabel("precision")
-plt.title("True Posterior and Inferred Posterior, Iterations =" + str(iter))
+plt.title("True Posterior and Inferred Posterior, Iterations =" + str(iter) + "\n" + "Prior mean = " + str(
+    true_mean) + ", precision = " + str(true_precision))
 
 plt.show()
