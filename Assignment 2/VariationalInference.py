@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 from mpl_toolkits.mplot3d import Axes3D
 
-N = 100
-true_mu, true_lam, true_a, true_b = 0, 0.1, 4, 2
+N = 10
+true_mu, true_lam, true_a, true_b = 1, 1, 3, 8
 
 
 def gauss_sample(mean, prec):
@@ -15,8 +15,8 @@ def gamma_sample(al, be):
     return np.random.gamma(al, 1 / be)
 
 
-true_mean = gauss_sample(true_mu, true_lam)
-true_precision = gamma_sample(true_a, true_b)
+true_mean = true_mu
+true_precision = true_a/true_b
 
 
 # generate random dataset X
@@ -48,10 +48,8 @@ def gaussian_parameters(lambda0, mu0, a0, b0, X):
 # E[mu**2], Needed to calculate b_n
 def expected_mu(lamb0, X, mu0, mu_n, lamb_n):
     E_mu2 = lamb_n ** (-1) + mu_n ** 2
-    square_sum = np.sum(X ** 2 - 2 * X * mu_n + E_mu2)
-    return square_sum + lamb0 * (mu0 ** 2 - 2 * mu0 * mu_n + E_mu2)
-
-#def expected_mu2(lamb0, X, mu0, mu_n, lamb_n):
+    square_sum = np.sum((X ** 2) - (2 * X * mu_n) + E_mu2)
+    return (1 / 2 * square_sum) + lamb0 * ((mu0 ** 2) - (2 * mu0 * mu_n) + E_mu2)
 
 
 def gamma_parameters(a0, b0, lambda0, mu0, lamb_n, mu_n, X):
@@ -61,32 +59,53 @@ def gamma_parameters(a0, b0, lambda0, mu0, lamb_n, mu_n, X):
     return a_n, b_n
 
 
+def approx_a(a0):
+    return a0 + ((N + 1) / 2)
+
+
+def approx_mu(l0, m0, X):
+    return (l0 * m0 + N * np.average(X)) / (l0 + N)
+
+
+def approx_lambda(l0, a_n, b_n):
+    return (l0 + N) * (a_n / b_n)
+
+
+def approx_b(m0, m_n, l_n, l0, b0):
+    return b0 + expected_mu(l0, X, m0, m_n, l_n)
+
+
 # Repeated (hopefully until convergence)
 def VI(a0, b0, mu0, lamb0, X):
     times = 1
     i = 0
     while True:
         mu, lamb = gaussian_parameters(lamb0, mu0, a0, b0, X)
-        a, b = gamma_parameters(a0, b0, lamb0, mu0, lamb, mu, X)
+        alpha, beta = gamma_parameters(a0, b0, lamb0, mu0, lamb, mu, X)
         if i == 0:
-            mu, lamb = gaussian_parameters(lamb0, mu0, a, b, X)
+            mu, lamb = gaussian_parameters(lamb0, mu0, alpha, beta, X)
         mu0 = mu
         lamb0 = lamb
-        a0 = a
-        b0 = b
+        a0 = alpha
+        b0 = beta
         i += 1
         if i == times:
-            return mu, lamb, a, b
+            return mu, lamb, alpha, beta
 
 
 # Once
 def VariationalInference(a0, b0, mu0, lamb0, X):
-    mu, lamb = gaussian_parameters(lamb0, mu0, a0, b0, X)
-    a, b = gamma_parameters(a0, b0, lamb0, mu0, lamb, mu, X)
-    mu0, lamb0 = lamb, mu
-    # mu, lamb = gaussian_parameters(lamb0, mu0, a, b, X)
-    # a, b = gamma_parameters(a, b, lamb0, mu0, lamb, mu, X)
-    return mu, lamb, a, b
+    al = approx_a(a0)
+    mu = approx_mu(lamb0, mu0, X)
+    iterations = 5
+    i = 0
+    la = lamb0
+    be = 1
+    while i < iterations:
+        be = approx_b(mu0, mu, l, lamb0, b0)
+        la = approx_lambda(lamb0, al, be)
+        i += 1
+    return mu, la, al, be
 
 
 """def plot(mean, variance, a, b):
@@ -101,7 +120,7 @@ def q_mu(x, mean, precision):
 
 
 def q_tau(tau, alpha, beta):
-    return stats.gamma.pdf(tau, alpha, loc=0, scale=1 / beta)
+    return stats.gamma.pdf(tau, alpha, loc=0, scale=(1 / beta))
 
 
 def true_plot(mean, precision, alpha, beta, data):
@@ -114,12 +133,13 @@ def true_plot(mean, precision, alpha, beta, data):
     Z = np.zeros_like(M)
     for i in range(Z.shape[0]):
         for j in range(Z.shape[1]):
-            Z[i][j] = q_mu(mus[i], mean, precision) * q_tau(taus[j], alpha, beta) * likelihood(data, true_mean,
-                                                                                               true_precision)
+            Z[i][j] = q_mu(mus[i], mean, precision) * q_tau(taus[j], alpha, beta) #* likelihood(data, true_mean,
+                                                                                   #            true_precision)
     plt.contour(M, T, Z, colors='green')
 
 
 def plot(mean, precision, alpha, beta):
+    print("Observed mean, tau: " + str(mean) + " ," + str(alpha/beta))
     print(
         "Observed mean, tau, lambda , alpha ,beta: " + str(mean) + " ," + str(precision) + " ," + str(
             alpha) + " ," + str(
@@ -138,11 +158,9 @@ def plot(mean, precision, alpha, beta):
 
 X = data_set()
 i = 0
-m, l, a, b = 14, 0.01, 4, 1
-t = 5
-while i < t:
-    m, l, a, b = VariationalInference(m, l, a, b, X)
-    i += 1
+m, l, a, b = 0, 1, 5, 1
+
+m, l, a, b = VariationalInference(m, l, a, b, X)
 
 plot(m, l, a, b)
 true_plot(true_mu, true_lam, true_a, true_b, X)
@@ -150,5 +168,3 @@ plt.xlabel("mean")
 plt.ylabel("precision")
 
 plt.show()
-
-x = np.array([2, 3, 4])
