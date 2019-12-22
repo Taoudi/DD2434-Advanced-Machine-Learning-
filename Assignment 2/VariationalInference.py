@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 from mpl_toolkits.mplot3d import Axes3D
 
-N = 1000
+N = 10
 true_mu, true_lam, true_a, true_b = 3, 1, 2, 6
 
 
@@ -58,15 +58,22 @@ def approx_b(m0, m_n, l_n, l0, b0):
 
 # Once
 def VariationalInference(mu0, lamb0, a0, b0, X):
-    al = approx_a(a0)
-    mu = approx_mu(lamb0, mu0, X)
-    iterations = 100
+    iterations = 1
     i = 0
-    la = 1
-    b0 = 1
+    la = lamb0
+    be = b0
+    mu = mu0
+    al = a0
     while i < iterations:
+        a0 = al
+        mu0 = mu
+        lamb0 = la
+        b0 = be
+        al = approx_a(a0)
+        mu = approx_mu(lamb0, mu0, X)
         be = approx_b(mu0, mu, l, lamb0, b0)
         la = approx_lambda(lamb0, al, be)
+        print(al)
         i += 1
         if i == iterations:
             return mu, la, al, be
@@ -97,9 +104,12 @@ def true_plot(mean, precision, alpha, beta, data):
     Z = np.zeros_like(M)
     for i in range(Z.shape[0]):
         for j in range(Z.shape[1]):
-            Z[i][j] = q_mu(mus[i], true_mean, true_precision * true_lam) * q_tau(taus[j], alpha, beta) #* likelihood(data
-                                                                                                       #   , mus[i],
-                                                                                                        #  taus[j])
+            Z[i][j] = q_mu(mus[i], true_mean, true_precision * true_lam) * q_tau(taus[j], alpha, beta) * likelihood(data
+                                                                                                                    ,
+                                                                                                                    mus[
+                                                                                                                        i],
+                                                                                                                    taus[
+                                                                                                                        j])
     plt.contour(M, T, Z, colors='green')
 
 
@@ -121,9 +131,11 @@ def plot(mean, precision, alpha, beta):
     plt.scatter(true_mean, true_precision, color="black")
 
 
-X = data_set(true_mean, true_precision)
+# X = data_set(true_mean, true_precision)
+X = np.array([4.91683995, 2.28125975, 0.95866215, 1.34756688, 0.88799854, 2.22666351,
+              3.93950624, 4.88324244, 0.20460881, 2.40607224])
 i = 0
-m, l, a, b = 3, 1, 5, 1
+m, l, a, b = 3, 1, 2, 6
 
 m, l, a, b = VariationalInference(m, l, a, b, X)
 
