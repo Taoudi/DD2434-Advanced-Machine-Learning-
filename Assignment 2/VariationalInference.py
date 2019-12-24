@@ -4,8 +4,8 @@ import scipy.stats as stats
 from matplotlib.lines import Line2D
 from mpl_toolkits.mplot3d import Axes3D
 
-N = 10
-true_mu, true_lam, true_a, true_b = 6, 0.1, 1, 4
+N = 450
+true_mu, true_lam, true_a, true_b = 1, 0.5, 1000, 1000
 
 
 def gauss_sample(mean, prec):
@@ -97,19 +97,19 @@ def true_plot(mean, precision, alpha, beta, data):
     print("Generated mean, tau: " + str(true_mean) + " ," + str(true_precision))
     print("Actual mean, lambda , alpha ,beta: " + str(mean) + " ," + str(precision) + " ," + str(alpha) + " ," + str(
         beta))
-    mus = np.linspace(4, 7, 100)
-    taus = np.linspace(true_precision - 0.5, true_precision + 0.5, 100)
+    mus = np.linspace(true_mean - 0.5, true_mean + 0.5, 100)
+    taus = np.linspace(true_precision - 0.75, true_precision + 0.75, 100)
     M, T = np.meshgrid(mus, taus, indexing="ij")
     Z = np.zeros_like(M)
     for i in range(Z.shape[0]):
         for j in range(Z.shape[1]):
-            Z[i][j] = q_mu(mus[i], true_mean, true_precision * true_lam) * q_tau(taus[j], alpha, beta) * likelihood(data
-                                                                                                                    ,
-                                                                                                                    mus[
-                                                                                                                        i],
-                                                                                                                    taus[
-                                                                                                                        j])
-    plt.contour(M, T, Z, colors='green')
+            Z[i][j] = q_mu(mus[i], true_mean, true_lam * taus[j]) * q_tau(taus[j], true_a, true_b) * likelihood(data
+                                                                                                                ,
+                                                                                                                mus[
+                                                                                                                    i],
+                                                                                                                taus[
+                                                                                                                    j])
+    plt.contour(M, T, Z, 5, colors='green')
 
 
 def plot(mean, precision, alpha, beta):
@@ -118,23 +118,23 @@ def plot(mean, precision, alpha, beta):
         "Observed mean, tau, lambda , alpha ,beta: " + str(mean) + " ," + str(precision) + " ," + str(
             alpha) + " ," + str(
             beta))
-    mus = np.linspace(4, 7, 100)
-    taus = np.linspace(true_precision - 0.5, true_precision + 0.5, 100)
+    mus = np.linspace(true_mean - 0.5, true_mean + 0.5, 100)
+    taus = np.linspace(true_precision - 0.75, true_precision + 0.75, 100)
     M, T = np.meshgrid(mus, taus, indexing="ij")
     Z = np.zeros_like(M)
 
     for i in range(Z.shape[0]):
         for j in range(Z.shape[1]):
             Z[i][j] = q_mu(mus[i], mean, precision) * q_tau(taus[j], alpha, beta)
-    plt.contour(M, T, Z, colors='red')
+    plt.contour(M, T, Z, 5, colors='red', )
     # plt.scatter(true_mean, true_precision, color="black")
 
 
 X = data_set(true_mean, true_precision)
-X = np.array([2.88968457, 6.96566223, 7.04354481, 6.74967938, 8.07064458, 5.77937716,
-              3.722499, 3.30732687, 5.07045578, 4.26291923])
+# X = np.array([2.88968457, 6.96566223, 7.04354481, 6.74967938, 8.07064458, 5.77937716,
+#              3.722499, 3.30732687, 5.07045578, 4.26291923])
 print(X)
-iter = 10
+iter = 10000
 m, l, a, b = 0, 0, 0, 0
 
 m, l, a, b = VariationalInference(m, l, a, b, X, iter)
@@ -148,7 +148,7 @@ true_plot(true_mu, true_lam, true_a, true_b, X)
 plot(m, l, a, b)
 plt.xlabel("mean")
 plt.ylabel("precision")
-plt.title("True Posterior and Inferred Posterior, Iterations =" + str(iter) + "\n" + "Prior mean = " + str(
-    true_mean) + ", precision = " + str(true_precision))
+plt.title("True Posterior and Inferred Posterior, Iterations =" + str(iter) + "\n" + "Prior mu = " + str(
+    true_mean) + ", lambda = " + str(true_lam) + ", a = " + str(true_a) + ", b = " + str(true_b))
 
 plt.show()
