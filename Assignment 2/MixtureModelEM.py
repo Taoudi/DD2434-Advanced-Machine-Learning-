@@ -34,13 +34,16 @@ def em_algorithm(seed_val, samples, num_clusters, max_num_iter=100):
     Function template: def em_algorithm(seed_val, samples, k, max_num_iter=10):
     You can change it to: def em_algorithm(seed_val, samples, k, max_num_iter=10, new_param_1=[], new_param_2=123):
     """
-
+    print("SAMPLESSSSSSSSSS" )
+    print(samples)
     # Set the seed
     np.random.seed(seed_val)
-
+    loglikelihood = 0
+    topology_list = 0
+    theta_list = 0
     # TODO: Implement EM algorithm here.
 
-    # Start: Example Code Segment. Delete this segment completely before you implement the algorithm.
+    """ Start: Example Code Segment. Delete this segment completely before you implement the algorithm.
     print("Running EM algorithm...")
 
     loglikelihood = []
@@ -62,7 +65,7 @@ def em_algorithm(seed_val, samples, num_clusters, max_num_iter=100):
     loglikelihood = np.array(loglikelihood)
     topology_list = np.array(topology_list)
     theta_list = np.array(theta_list)
-    # End: Example Code Segment
+     End: Example Code Segment"""
 
     ###
 
