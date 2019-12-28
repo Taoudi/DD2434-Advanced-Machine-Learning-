@@ -47,10 +47,10 @@ def create_graph(X, K):
         for j in range(0, len(K)):
             if X[i] == X[j] and i!=j:
                 if X[i] == 0 and q_0 != 0:
-                    w = q_0 * np.log(q_0 / (times_0**2))
+                    w = q_0 * np.log(q_0 / ((q_0*times_0)**2))
                     edges.append((i, j, w))
                 elif X[i] == 1 and q_1 != 0:
-                    w = q_1 * np.log(q_1 / (times_1**2))
+                    w = q_1 * np.log(q_1 / ((q_1*times_1)**2))
                     edges.append((i, j, w))
     return {
         'vertices': vertices,
