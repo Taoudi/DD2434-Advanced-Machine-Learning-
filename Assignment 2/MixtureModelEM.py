@@ -2,6 +2,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from Tree import TreeMixture
+from Kruskal_v2 import kruskal
 
 
 def save_results(loglikelihood, topology_array, theta_array, filename):
@@ -16,6 +17,45 @@ def save_results(loglikelihood, topology_array, theta_array, filename):
     np.save(likelihood_filename, loglikelihood)
     np.save(topology_array_filename, topology_array)
     np.save(theta_array_filename, theta_array)
+
+
+def calc_pi(r):
+    r_t = np.transpose(r)
+    priors = np.zeros(len(r_t))
+    for i, r_t_k in enumerate(r_t):
+        priors[i] = sum(r_t_k) / len(r)
+    return priors
+
+
+# WRONG
+def q(val, X, K):
+    s = 0
+    times = 0
+    for i, x in enumerate(X):
+        if x == val:
+            s += K[i]
+            times += 1
+    return times, (s / np.sum(K))
+
+# this is incorrect :)
+def create_graph(X, K):
+    times_0, q_0 = q(0, X, K)
+    times_1, q_1 = q(1, X, K)
+    edges = list()
+    vertices = list(range(0, len(K)))
+    for i in range(0, len(K)):
+        for j in range(0, len(K)):
+            if X[i] == X[j] and i!=j:
+                if X[i] == 0 and q_0 != 0:
+                    w = q_0 * np.log(q_0 / (times_0**2))
+                    edges.append((i, j, w))
+                elif X[i] == 1 and q_1 != 0:
+                    w = q_1 * np.log(q_1 / (times_1**2))
+                    edges.append((i, j, w))
+    return {
+        'vertices': vertices,
+        'edges': edges
+    }
 
 
 def em_algorithm(seed_val, samples, num_clusters, max_num_iter=100):
@@ -34,18 +74,27 @@ def em_algorithm(seed_val, samples, num_clusters, max_num_iter=100):
     Function template: def em_algorithm(seed_val, samples, k, max_num_iter=10):
     You can change it to: def em_algorithm(seed_val, samples, k, max_num_iter=10, new_param_1=[], new_param_2=123):
     """
-    print("SAMPLESSSSSSSSSS" )
-    print(samples)
     # Set the seed
     np.random.seed(seed_val)
     loglikelihood = 0
     topology_list = 0
     theta_list = 0
+    responsibilities = samples
+    priors = calc_pi(responsibilities)
+    graphs = []
+    for i, K in enumerate(responsibilities.T):
+        graphs.append(create_graph(samples.T[i], K))
+        #print(graphs[i])
+    T = list()
+    for i, graph in enumerate(graphs):
+        T.append(kruskal(graph))
+        print(T[i])
+
     # TODO: Implement EM algorithm here.
 
-    """ Start: Example Code Segment. Delete this segment completely before you implement the algorithm.
+    # Start: Example Code Segment. Delete this segment completely before you implement the algorithm.
     print("Running EM algorithm...")
-
+    """
     loglikelihood = []
 
     for iter_ in range(max_num_iter):
@@ -65,9 +114,11 @@ def em_algorithm(seed_val, samples, num_clusters, max_num_iter=100):
     loglikelihood = np.array(loglikelihood)
     topology_list = np.array(topology_list)
     theta_list = np.array(theta_list)
-     End: Example Code Segment"""
-
-    ###
+    print("PRINGINT STUFF::::::")
+    print(len(topology_list))
+    print(len(theta_list))
+    # End: Example Code Segment
+    """
 
     return loglikelihood, topology_list, theta_list
 
