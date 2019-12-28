@@ -29,29 +29,14 @@ def calc_pi(r):
 
 # WRONG
 def q(val, X, K):
-    s = 0
-    times = 0
-    for i, x in enumerate(X):
-        if x == val:
-            s += K[i]
-            times += 1
-    return times, (s / np.sum(K))
+    fuck_this_assignment = True
+    return fuck_this_assignment
 
-# this is incorrect :)
+
+# idi nahui blyat
 def create_graph(X, K):
-    times_0, q_0 = q(0, X, K)
-    times_1, q_1 = q(1, X, K)
     edges = list()
     vertices = list(range(0, len(K)))
-    for i in range(0, len(K)):
-        for j in range(0, len(K)):
-            if X[i] == X[j] and i!=j:
-                if X[i] == 0 and q_0 != 0:
-                    w = q_0 * np.log(q_0 / ((q_0*times_0)**2))
-                    edges.append((i, j, w))
-                elif X[i] == 1 and q_1 != 0:
-                    w = q_1 * np.log(q_1 / ((q_1*times_1)**2))
-                    edges.append((i, j, w))
     return {
         'vertices': vertices,
         'edges': edges
@@ -84,7 +69,7 @@ def em_algorithm(seed_val, samples, num_clusters, max_num_iter=100):
     graphs = []
     for i, K in enumerate(responsibilities.T):
         graphs.append(create_graph(samples.T[i], K))
-        #print(graphs[i])
+        # print(graphs[i])
     T = list()
     for i, graph in enumerate(graphs):
         T.append(kruskal(graph))
