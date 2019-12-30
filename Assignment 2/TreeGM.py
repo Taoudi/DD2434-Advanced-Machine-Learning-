@@ -29,6 +29,32 @@ from Tree import Tree
 from Tree import Node
 
 
+# Starting from root
+def derive_s(tree_topology, theta, beta):
+    s = dict()
+
+    def calc_s(index, level, root=False):
+        s = 0
+        if index not in range(0, len(tree_topology)):
+            return 0
+        if root:
+            level = -1
+
+        if tree_topology[index + 1] == level + 1:
+            s += derive_s(index + 1, level + 1)
+        if tree_topology[index+2] == level+1:
+            s += derive_s(index + 2, level + 1)
+
+
+def beta_likelihood(beta, tree_topology, theta):
+    derive_s(tree_topology, theta, beta)
+
+    for i, b in enumerate(beta):
+        if not np.isnan(b):
+            print(".")
+    # leaf_prob()
+
+
 def calculate_likelihood(tree_topology, theta, beta):
     """
     This function calculates the likelihood of a sample of leaves.
@@ -45,11 +71,11 @@ def calculate_likelihood(tree_topology, theta, beta):
     """
 
     # TODO Add your code here
+    print("-----------------------------------------")
     print("Calculating the likelihood...")
-    likelihood = np.random.rand()
-    print(beta)
-    print(tree_topology)
 
+    likelihood = np.random.rand()
+    likelihood = beta_likelihood(beta, tree_topology, theta)
     return likelihood
 
 
