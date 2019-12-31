@@ -149,7 +149,7 @@ def calculate_likelihood(tree_topology, theta, beta):
         if not np.isnan(cat):
             part_likelihood = t(leaf, cat, int(tree_topology[leaf]),
                                 find_sibling(leaf, tree_topology)) #* s_dict[leaf][cat]
-            likelihood *= part_likelihood
+            likelihood = part_likelihood
 
     return likelihood
 
