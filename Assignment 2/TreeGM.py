@@ -147,8 +147,10 @@ def calculate_likelihood(tree_topology, theta, beta):
 
     for leaf, cat in enumerate(beta):
         if not np.isnan(cat):
-            likelihood *= t(leaf, cat, int(tree_topology[leaf]),
-                            find_sibling(leaf, tree_topology))  # *s_dict[leaf][cat]
+            part_likelihood = t(leaf, cat, int(tree_topology[leaf]),
+                                find_sibling(leaf, tree_topology)) #* s_dict[leaf][cat]
+            likelihood *= part_likelihood
+
     return likelihood
 
 
@@ -158,7 +160,7 @@ def main():
 
     print("\n1. Load tree data from file and print it\n")
 
-    filename = "data2_3/q2_3_small_tree.pkl"  # "data/q2_3_medium_tree.pkl", "data/q2_3_large_tree.pkl"
+    filename = "data2_3/q2_3_large_tree.pkl"  # "data/q2_3_medium_tree.pkl", "data/q2_3_large_tree.pkl"
     t = Tree()
     t.load_tree(filename)
     t.print()

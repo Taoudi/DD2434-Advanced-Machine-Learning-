@@ -27,12 +27,6 @@ def calc_pi(r):
     return priors
 
 
-# WRONG
-def q(val, X, K):
-    fuck_this_assignment = True
-    return fuck_this_assignment
-
-
 # idi nahui blyat
 def create_graph(X, K):
     edges = list()
