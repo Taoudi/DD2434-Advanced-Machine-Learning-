@@ -116,7 +116,6 @@ def calculate_likelihood(tree_topology, theta, beta):
     # TODO Add your code here
     print("-----------------------------------------")
     print("Calculating the likelihood...")
-    print("S-GO!")
     s_dict = s_root(tree_topology, theta, beta)
     t_dict = defaultdict(dict)
 
@@ -132,9 +131,7 @@ def calculate_likelihood(tree_topology, theta, beta):
                     result += CPD(theta, u, i, j) * t(parent, j, tree_topology[parent],
                                                       find_sibling(parent, tree_topology))
                     t_dict[u][i] = result
-                    #print(result)
-                    return result
-                return 0  # if sibling doesnt exist, fix this
+                return result
             if t_dict[u].get(i) is not None:
                 return t_dict[u][i]
             parent = int(parent)
@@ -148,7 +145,6 @@ def calculate_likelihood(tree_topology, theta, beta):
                                                                                                            parent,
                                                                                                            tree_topology))
             t_dict[u][i] = result
-            #print(result)
             return result
 
         for leaf, cat in enumerate(beta):
@@ -158,7 +154,6 @@ def calculate_likelihood(tree_topology, theta, beta):
                 print(likelihood)
         return likelihood
 
-    print("T-GO!")
     return t_leaves()
 
 
