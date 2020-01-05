@@ -4,8 +4,8 @@ import scipy.stats as stats
 from matplotlib.lines import Line2D
 from mpl_toolkits.mplot3d import Axes3D
 
-N = 450
-true_mu, true_lam, true_a, true_b = 1, 0.5, 1000, 1000
+N = 50
+true_mu, true_lam, true_a, true_b = 1, 0.5, 1000, 300
 
 
 def gauss_sample(mean, prec):
