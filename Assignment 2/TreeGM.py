@@ -70,14 +70,17 @@ def s_root(tree_topology, theta, beta):
             else:
                 s_storage[u][j] = 0
                 return 0
-        result = np.zeros(len(children))
+        #result = np.zeros(len(children))
+        result = [0]*len(children)
         for child_nr, child in enumerate(children):
             for category in range(0, len(theta[0])):
                 result[child_nr] += S(child, category, find_children(child, tree_topology, beta)) * CPD(theta, child,
                                                                                                         category, j)
-        res = np.prod(result)
+        res = 1
+        for i in range(len(children)):
+            res *= result[i]
         s_storage[u][j] = res
-        # print(np.prod(result))
+        #res = np.prod(result)
         return res
 
     for i, th in enumerate(theta[0]):
@@ -112,27 +115,17 @@ def calculate_likelihood(tree_topology, theta, beta):
     # TODO Add your code here
     print("-----------------------------------------")
     print("Calculating the likelihood...")
+
     s_dict = s_root(tree_topology, theta, beta)
     t_dict = defaultdict(dict)
-
     likelihood = 1
 
     # Calculating t dynamically
     def t(u, i, parent, sibling):
-        if t_dict[u].get(i) is not None:  # If it has already been calculated
-            return t_dict[u].get(i)
-
         if np.isnan(parent):  # If root
             return CPD(theta, u, i)  # * s_dict[u][i]
-
-        """if sibling is None:  # If no siblings
-            print("COOLBEANS")
-            result = 0
-            for j in range(0, len(theta[0])):
-                result += CPD(theta, u, i, j) * t(parent, j, tree_topology[parent],
-                                                  find_sibling(parent, tree_topology))
-            t_dict[u][i] = result
-            return result"""
+        if t_dict[u].get(i) is not None:  # If it has already been calculated
+            return t_dict[u].get(i)
 
         parent = int(parent)
         result = 0
@@ -147,17 +140,12 @@ def calculate_likelihood(tree_topology, theta, beta):
         t_dict[u][i] = result
         return result
 
-    print("--------------")
-
     for leaf, cat in enumerate(beta):
         if not np.isnan(cat):
             part_likelihood = t(leaf, cat, tree_topology[leaf],
-                                find_sibling(leaf, tree_topology))  # * s_dict[leaf][cat]
+                                find_sibling(leaf, tree_topology)) * s_dict[leaf].get(cat)
             print(part_likelihood)
-            likelihood *= part_likelihood
-    print(tree_topology)
-
-    return likelihood
+            return part_likelihood
 
 
 def main():
@@ -166,7 +154,7 @@ def main():
 
     print("\n1. Load tree data from file and print it\n")
 
-    filename = "data2_3/q2_3_small_tree.pkl"  # "data/q2_3_medium_tree.pkl", "data/q2_3_large_tree.pkl"
+    filename = "data2_3/q2_3_large_tree.pkl"  # "data/q2_3_medium_tree.pkl", "data/q2_3_large_tree.pkl"
     t = Tree()
     t.load_tree(filename)
     t.print()
