@@ -61,8 +61,8 @@ def s_root(tree_topology, theta, beta):
     s_dict = defaultdict(dict)
 
     def S(u, j, children):
-        if s_dict[u].get(j) is not None:
-            return s_dict[u][j]
+        #if s_dict[u].get(j) is not None:
+        #    return s_dict[u][j]
         if len(children) < 1:
             if beta.astype(int)[u] == j:
                 s_dict[u][j] = 1
@@ -75,10 +75,8 @@ def s_root(tree_topology, theta, beta):
             for category in range(0, len(theta[0])):
                 result[child_nr] += S(child, category, find_children(child, tree_topology, beta)) * CPD(theta, child,
                                                                                                         category, j)
-
-        s_result = np.prod(result)
-        s_dict[u][j] = s_result
-        return s_result
+        s_dict[u][j] = np.prod(result)
+        return s_dict[u][j]
 
     for i, th in enumerate(theta[0]):
         prob += S(0, i, find_children(0, tree_topology, beta)) * CPD(theta, 0, i)
@@ -114,22 +112,23 @@ def calculate_likelihood(tree_topology, theta, beta):
     print("Calculating the likelihood...")
     s_dict = s_root(tree_topology, theta, beta)
     t_dict = defaultdict(dict)
+    #print(s_dict[50])
 
     likelihood = 1
 
     # Calculating t dynamically
     def t(u, i, parent, sibling):
-        if t_dict[u].get(i) is not None:  # If it has already been calculated
-            return t_dict[u][i]
+        #if t_dict[u].get(i) is not None:  # If it has already been calculated
+        #    return t_dict[u][i]
 
         if np.isnan(parent):  # If root
-            return CPD(theta, u, i)# * s_dict[u][i]
+            return CPD(theta, u, i) # * s_dict[u][i]
         if sibling is None:  # If no siblings
             result = 0
             for j in range(0, len(theta[0])):
                 result += CPD(theta, u, i, j) * t(parent, j, tree_topology[parent],
                                                   find_sibling(parent, tree_topology))
-                t_dict[u][i] = result
+            t_dict[u][i] = result
             return result
 
         parent = int(parent)
@@ -150,7 +149,7 @@ def calculate_likelihood(tree_topology, theta, beta):
             part_likelihood = t(leaf, cat, int(tree_topology[leaf]),
                                 find_sibling(leaf, tree_topology)) #* s_dict[leaf][cat]
             print(part_likelihood)
-            likelihood *= part_likelihood
+            likelihood = part_likelihood
 
     return likelihood
 

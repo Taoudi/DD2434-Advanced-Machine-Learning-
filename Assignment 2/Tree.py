@@ -370,14 +370,17 @@ class Tree:
         """ This function returns the theta array as a numpy array. """
 
         theta_array = []
+        for i in range(self.num_nodes):
+            theta_array.append(np.zeros((self.k, self.k)))
+
         visit_list = [self.root]
         while len(visit_list) != 0:
             cur_node = visit_list[0]
             visit_list = visit_list[1:]
             visit_list = visit_list + cur_node.descendants
-            theta_array.append(cur_node.cat)
+            theta_array[int(cur_node.name)] = cur_node.cat
 
-        return np.array(theta_array)
+        return theta_array # np.array(theta_array)
 
     def get_tree_newick(self):
         """ This function creates the Newick string of the tree. """
