@@ -17,6 +17,12 @@ class Document:
 
 
 def extract_text(file_name):
+    """
+    Goes through .sgm file and extracts all bodies of text along with the corresponding topics
+    :param - name of .sgm file
+    :return - list of Document objects
+    """
+
     documents = []
     path = 'reuters21578/' + file_name
     f = open(path, 'rb')
@@ -31,7 +37,6 @@ def extract_text(file_name):
             for d in Ds:  ### Iterating through topics for specific document
                 topics.append(d.text)
 
-            text = ""
             textBody = content.findAll('body')
             if len(textBody) == 1:
                 text = textBody[0].text  ### The actual document (in textform, needs to be converted into BoW)
@@ -46,4 +51,4 @@ for file in os.listdir(directory):
     if filename.endswith(".sgm"):
         documents += extract_text(filename)
 
-print(documents[1000])
+# print(documents[1090]) 
