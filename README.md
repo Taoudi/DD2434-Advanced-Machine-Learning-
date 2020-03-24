@@ -13,3 +13,7 @@ Directed Graphical Models and Variational Inference
 - [x] 2.3 Likelihood of a Tree GM
 - [x] 2.4 Variational Inference
 - [ ] 2.5 Mixture of Trees
+
+### Project - LDA 
+
+https://github.com/bayesianists/LatentDirichletAllocation
